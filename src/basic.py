@@ -17,7 +17,6 @@ def handleText(text):
 	 		)
 
 def handle(message):
-	print("Handling message: " + str(message))
 	for key, value in message.iteritems():
 		print(key, value)
 		if key == "text":

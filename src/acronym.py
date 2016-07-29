@@ -14,15 +14,13 @@
 #
 class Acronyms:
 
-    def __init__(self):
+    def __init__(self, filename=None):
         self.data = {}
-
-    def __init__(self, filename):
-        self.data = {}
-        self.load(filename)
+        if filename is not None:
+            self.load(filename)
 
     def merge(self, data):
-        self.data = {**self.data, **data}
+        self.data.update(data)
         return self
 
     def load(self, filename):

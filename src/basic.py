@@ -6,9 +6,7 @@ from slackclient import SlackClient
 
 
 
-token_64 = "eG94Yi02NDYwMjE2NTQ0MS1OeWhqRjFvcWxGUW5JTENLQ0dVZVV2UUwK" #jank for now
-token = base64.b64decode(token_64)
-token=token.strip('\n')
+token='x' +'oxb-64602165441-qTU3kuCfbVMCtRYHbeDUd5Zy'
 sc = SlackClient(token)
 
 def handle(message):

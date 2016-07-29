@@ -13,22 +13,24 @@ class Bot:
         self.ac = Acronyms()
         self.ac.put('yolo', 'you only live once')
 
-    def handleText(self, text):
+    def handleText(self, text, channel):
         text = text.lower()
         x = self.ac.get(text)
         if x == '':
             return
         message = text + ' is ' + x 
         self.sc.api_call(
-            "chat.postMessage", channel="#general", text=message,
-            username='pybot'
+            "chat.postMessage", channel=channel, text=message,
+            username='acrobot', icon_emoji=':a:'
             )
 
     def handle(self, message):
+        if "text" in message:
+            text = message["text"]
+            channel = message["channel"]
+            self.recog(text, channel)
         for key, value in message.iteritems():
             print(key, value)
-            if key == "text":
-                self.recog(message[key])
 
     def run(self):
         if self.sc.rtm_connect():
@@ -41,15 +43,15 @@ class Bot:
         else:
             print "Connection Failed, invalid token?"
 
-    def recog(self, text):
+    def recog(self, text, channel):
         tokens = text.split(' ')
         if len(tokens) > 2 and tokens[0].lower() == 'acronym':
             first_word = tokens[1]
             second_word = ' '.join(tokens[2:])
             self.ac.put(first_word.lower(), second_word)
-            self.handleText(first_word)
+            self.handleText(first_word, channel)
         elif len(tokens) > 2 and tokens[0].lower() == 'what' and tokens[1].lower() == 'is':
-            self.handleText(' '.join(tokens[2:]).strip('?'))
+            self.handleText(' '.join(tokens[2:]).strip('?'), channel)
 
 if __name__ == "__main__":
     Bot().run()

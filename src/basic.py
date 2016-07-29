@@ -30,7 +30,6 @@ class Bot:
             if key == "text":
                 self.recog(message[key])
 
-
     def run(self):
         if self.sc.rtm_connect():
             print "Connection valid, reading from rtm"
@@ -43,19 +42,14 @@ class Bot:
             print "Connection Failed, invalid token?"
 
     def recog(self, text):
-        curr = 'what is ' 
-        acronym = 'acronym '
-        if text.lower().startswith(curr):
-            ret = text[len(curr):]
-            self.handleText(ret)
-        elif text.lower().startswith(acronym):
-            first_space = text.index(' ', len(acronym))
-            first_word = text[len(acronym):first_space]
-            second_word = text[first_space + 1:]
+        tokens = text.split(' ')
+        if len(tokens) > 2 and tokens[0].lower() == 'acronym':
+            first_word = tokens[1]
+            second_word = ' '.join(tokens[2:])
             self.ac.put(first_word.lower(), second_word)
             self.handleText(first_word)
-
-
+        elif len(tokens) > 2 and tokens[0].lower() == 'what' and tokens[1].lower() == 'is':
+            self.handleText(' '.join(tokens[2:]).strip('?'))
 
 if __name__ == "__main__":
     Bot().run()

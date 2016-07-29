@@ -14,12 +14,13 @@ class Bot:
         self.ac.put('yolo', 'you only live once')
 
     def handleText(self, text):
+        text = text.lower()
         x = self.ac.get(text)
         if x == '':
             return
-
+        message = text + ' is ' + x 
         self.sc.api_call(
-            "chat.postMessage", channel="#general", text=x,
+            "chat.postMessage", channel="#general", text=message,
             username='pybot'
             )
 
@@ -27,7 +28,7 @@ class Bot:
         for key, value in message.iteritems():
             print(key, value)
             if key == "text":
-                self.handleText(message[key])
+                self.recog(message[key])
 
 
     def run(self):
@@ -40,6 +41,21 @@ class Bot:
                 time.sleep(1)
         else:
             print "Connection Failed, invalid token?"
+
+    def recog(self, text):
+        curr = 'what is ' 
+        acronym = 'acronym '
+        if text.lower().startswith(curr):
+            ret = text[len(curr):]
+            self.handleText(ret)
+        elif text.lower().startswith(acronym):
+            first_space = text.index(' ', len(acronym))
+            first_word = text[len(acronym):first_space]
+            second_word = text[first_space + 1:]
+            self.ac.put(first_word.lower(), second_word)
+            self.handleText(first_word)
+
+
 
 if __name__ == "__main__":
     Bot().run()

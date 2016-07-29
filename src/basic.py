@@ -1,17 +1,29 @@
 import time
+import json
 from slackclient import SlackClient
 
-token = "xoxb-64602165441-HY31HJpU9Oac8vbt8drWAJ0S"# found at https://api.slack.com/web#authentication
+
+
+
+
+token = ""# found at https://api.slack.com/web#authentication
 sc = SlackClient(token)
-print sc.api_call("api.test")
-print sc.api_call("channels.info", channel="1234567890")
-print sc.api_call(
-        "chat.postMessage", channel="#general", text="Hello from Python! :tada:",
-        username='pybot', icon_emoji=':robot_face:'
-)
+
+def handle(message):
+	json_string=message
+	obj = json.loads(json_string)
+	# print(obj)
+	# if obj == 'yolo':
+	# 	sc.api_call(
+	# 		"chat.postMessage", channel="#general", text="fuck your yolo",
+	# 		username='pybot'
+	# 		)
+
 if sc.rtm_connect():
-        while True:
-                print sc.rtm_read()
-                time.sleep(1)
-else:
-	print "Connection Failed, invalid token?"
+	while True:
+		handle(sc.rtm_read())
+		time.sleep(1)
+	else:
+		print "Connection Failed, invalid token?"
+
+
